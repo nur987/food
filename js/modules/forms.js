@@ -1,5 +1,7 @@
-function forms() {
-  const forms = document.querySelectorAll("form");
+import { closeModal, openModal } from "./modal";
+import { postData } from "../services/services";
+function forms(formSelector, modalTimerId) {
+  const forms = document.querySelectorAll(formSelector);
 
   const message = {
     loading: "img/form/spinner.svg",
@@ -10,19 +12,6 @@ function forms() {
   forms.forEach((item) => {
     bindPostData(item);
   });
-
-  const postData = async (url, data) => {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: data,
-    });
-    ////! если не было бы async await из за Promise пока данные получим он уже в функцию дал бы undefined
-    // здесь await чтобы ждал пока изменит в формат json потом присваивать в функцию
-    return await res.json();
-  };
 
   function bindPostData(form) {
     ////! если В Форме есть баттон у него есть автоматическая оправка submit
@@ -69,7 +58,7 @@ function forms() {
     const prevModalDialog = document.querySelector(".modal__dialog");
 
     prevModalDialog.classList.add("hide");
-    openModal();
+    openModal(".modal", modalTimerId);
 
     const thanksModal = document.createElement("div");
     // в новый div даем стили модального окна
@@ -85,9 +74,9 @@ function forms() {
       thanksModal.remove();
       prevModalDialog.classList.add("show");
       prevModalDialog.classList.remove("hide");
-      closeModal();
+      closeModal(".modal");
     }, 4000);
   }
 }
 
-module.exports = forms;
+export default forms;
